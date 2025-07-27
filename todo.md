@@ -38,3 +38,5 @@ __________________________
 4/ Connecter vous avec le mot de passe en clair et votre user name
 
 __________________________
+
+5/ Vérifier les fichiers .env, server.js et vite.config.js: remplacer les paramètres mentionnés dans les fichiers par le vôtre.
