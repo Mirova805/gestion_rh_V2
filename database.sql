@@ -1,0 +1,85 @@
+drop database if exists your_database;
+create database your_database;
+use your_database;
+
+drop table if exists EMPLOYE;
+CREATE TABLE IF NOT EXISTS EMPLOYE (
+    NumEmp INT PRIMARY KEY AUTO_INCREMENT,
+    PhotoID VARCHAR(255),
+    Nom VARCHAR(50) NOT NULL,
+    Prénom VARCHAR(50) NOT NULL,
+    Poste VARCHAR(50) NOT NULL,
+    SalaireMensuel INT,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    HeureDebutTravail TIME NOT NULL DEFAULT '08:00:00',
+    HeureFintravail TIME NOT NULL DEFAULT '17:00:00',
+    TravailLundi BOOLEAN NOT NULL DEFAULT TRUE,
+    TravailMardi BOOLEAN NOT NULL DEFAULT TRUE,
+    TravailMercredi BOOLEAN NOT NULL DEFAULT TRUE,
+    TravailJeudi BOOLEAN NOT NULL DEFAULT TRUE,
+    TravailVendredi BOOLEAN NOT NULL DEFAULT TRUE,
+    TravailSamedi BOOLEAN NOT NULL DEFAULT FALSE,
+    TravailDimanche BOOLEAN NOT NULL DEFAULT FALSE,
+    DateEmbauche DATE NOT NULL DEFAULT (CURRENT_DATE) 
+);
+
+drop table if exists UTILISATEUR;
+CREATE TABLE IF NOT EXISTS UTILISATEUR (
+    NumUtil INT PRIMARY KEY AUTO_INCREMENT,
+    NomUtil VARCHAR(50) UNIQUE NOT NULL,
+    MotDePasse VARCHAR(255) NOT NULL,
+    TitreUtil ENUM('user', 'superuser', 'admin') NOT NULL,
+    NumEmp INT, 
+    FOREIGN KEY (NumEmp) REFERENCES EMPLOYE(NumEmp) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+drop table if exists POINTAGE;
+CREATE TABLE IF NOT EXISTS POINTAGE (
+    NumPointage INT PRIMARY KEY AUTO_INCREMENT,	
+    DateHeurePointage DATETIME DEFAULT CURRENT_TIMESTAMP,
+    NumEmp INT NOT NULL,
+    HeureRetard TIME,
+    PointageInfo VARCHAR(30) NOT NULL,
+    FOREIGN KEY (NumEmp) REFERENCES EMPLOYE(NumEmp) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+drop table if exists CONGE;
+CREATE TABLE IF NOT EXISTS CONGE (
+    NumConge INT PRIMARY KEY AUTO_INCREMENT,
+    NumEmp INT NOT NULL,
+    Motif VARCHAR(100) NOT NULL,
+    Nbrjr INT NOT NULL,
+    DateDemande DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    DebutConge DATE NOT NULL,
+    DateRetour DATE NOT NULL,
+    CongeInfo ENUM('En attente', 'Validé', 'Refusé', 'En cours', 'Terminé') NOT NULL DEFAULT 'En attente',
+    FOREIGN KEY (NumEmp) REFERENCES EMPLOYE(NumEmp) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+drop table if exists CONFIG;
+CREATE TABLE IF NOT EXISTS CONFIG (
+    ConfigID INT PRIMARY KEY AUTO_INCREMENT,
+    Poste VARCHAR(50), 
+    NumEmp INT, 
+    DateDebut DATE NOT NULL,
+    DateFin DATE NOT NULL,
+    HeureDebut TIME NOT NULL,
+    HeureFin TIME NOT NULL,
+    FOREIGN KEY (NumEmp) REFERENCES EMPLOYE(NumEmp) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+drop table if exists NOTIFICATIONS;
+CREATE TABLE IF NOT EXISTS NOTIFICATIONS (
+    NotifID INT PRIMARY KEY AUTO_INCREMENT,
+    NumEmpCible INT,
+    Titre VARCHAR(50) NOT NULL,
+    Message TEXT NOT NULL,
+    DateNotif DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    Statut ENUM('Non lu', 'Lu') DEFAULT 'Non lu',
+    TypeNotif ENUM('Demande de Congé', 'Changement Horaire', 'Absence', 'Statut Congé') NOT NULL,
+    UpdatedBy VARCHAR(50), 
+    UpdatedByRole ENUM('superuser', 'admin'),
+    UpdatedAt DATETIME,
+    Notified BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (NumEmpCible) REFERENCES EMPLOYE(NumEmp) ON DELETE SET NULL ON UPDATE CASCADE
+)

@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.react-confirm-alert-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.react-confirm-alert-body {
+  color: #374151; 
+  font-size: 1rem;
+  width:max-content !important;
+}
+
+.react-confirm-alert-button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.react-confirm-alert-button-group button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  width:50px
+}
+
+.react-confirm-alert-button-group button:hover {
+  opacity:0.75;
+  color: white;
+}
+
+.Toastify__toast {
+  width: max-content !important;
+  display: flex !important;
+  justify-content: center !important;
+  padding-right: 37.5px !important;
+}
